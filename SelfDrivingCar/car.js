@@ -11,9 +11,12 @@ class Car {
         this.friction = 0.05;
         this.angle = 0;
         this.damaged = false;
+
+        this.useBrain = controlType == "AI"
         
         if(controlType != "DUMMY") {
             this.sensor = new Sensor(this);
+            this.brain = new NeuralNetwork([this.sensor.rayCount, 6, 4])
         }
 
         this.controls = new Controls(controlType);
@@ -27,6 +30,15 @@ class Car {
         }
         if(this.sensor) {
             this.sensor.update(roadBoarders, traffic);
+            const offsets = this.sensor.readings.map(s => s == null ? 0 : 1 - s.offsets);
+            const outputs = NeuralNetwork.feedForward(offsets, this.brain);
+
+            if(this.useBrain) {
+                this.controls.forward = outputs[0];
+                this.controls.left = outputs[1];
+                this.controls.right = outputs[2];
+                this.controls.backward = outputs[3];
+            }
         }
     }
 
@@ -38,7 +50,6 @@ class Car {
         }
 
         for(let i = 0; i < traffic.length; i++) {
-            console.log(traffic[i].length)
             if(polysIntersect(this.polygon, traffic[i].polygon)) {
                 return true;
             }
