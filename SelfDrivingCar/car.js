@@ -23,14 +23,14 @@ class Car {
     }
 
     update(roadBoarders, traffic) {
-            if(!this.damaged){
+        if(!this.damaged){
             this.#move()
             this.polygon = this.#createPolygon();
             this.damaged = this.#assessDamage(roadBoarders, traffic);
         }
         if(this.sensor) {
             this.sensor.update(roadBoarders, traffic);
-            const offsets = this.sensor.readings.map(s => s == null ? 0 : 1 - s.offsets);
+            const offsets = this.sensor.readings.map(s => s == null ? 0 : 1 - s.offset);
             const outputs = NeuralNetwork.feedForward(offsets, this.brain);
 
             if(this.useBrain) {
