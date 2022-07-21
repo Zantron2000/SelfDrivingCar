@@ -1,9 +1,9 @@
 class Sensor {
-    constructor(car) {
+    constructor(car, rayCount, rayLength, rayAngle) {
         this.car = car;
-        this.rayCount = 9;
-        this.rayLength = 150;
-        this.raySpread = Math.PI;
+        this.rayCount = rayCount;
+        this.rayLength = rayLength;
+        this.raySpread = rayAngle;
 
         this.rays = [];
         this.readings = [];
